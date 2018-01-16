@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"fmt"
 	"net/http"
 	"github.com/takara9/go_util"
@@ -15,7 +16,11 @@ func main() {
 	go_util.OpenLog("logfile.txt")
 	go_util.LoadConfig("config.json")
 
-	port := ":" + go_util.Config.TcpPort
+	port := ":" + os.Getenv("PORT")
+	if port == ":" {
+		port = go_util.Config.TcpPort
+	}
+
 	http.HandleFunc("/", handler)
 	http.ListenAndServe(port, nil)
 }
